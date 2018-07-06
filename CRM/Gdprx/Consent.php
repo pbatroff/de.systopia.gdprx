@@ -231,4 +231,26 @@ class CRM_Gdprx_Consent {
       return NULL;
     }
   }
+
+  /**
+   * get a consent record by contact_id
+   */
+  public static function getContactRecords($contact_id) {
+    $data = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_value_gdpr_consent WHERE entity_id = %1",
+      array(1 => array($contact_id, 'Integer')));
+    $result = array();
+    while ($data->fetch()) {
+      $result[] = array(
+        'entity_id'           => $data->entity_id,
+        'consent_date'        => $data->date,
+        'consent_expiry_date' => $data->expiry,
+        'consent_category'    => $data->category,
+        'consent_source'      => $data->source,
+        'consent_type'        => $data->type,
+        'consent_terms'       => $data->terms_id,
+        'consent_note'        => $data->note,
+      );
+    }
+    return $result;
+  }
 }
